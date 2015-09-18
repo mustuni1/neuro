@@ -4,14 +4,16 @@ import java.util.ArrayList;
 class EEG_Processing_User {
   private float fs_Hz;  //sample rate
   private int nchan;  
-  private int total;
-  private ArrayList<Float> elements = new ArrayList<>();
-  
+  private ArrayList<Float> elements;
+  int count;
+  boolean active = false;
   //add your own variables here
   
  
   //class constructor
   EEG_Processing_User(int NCHAN, float sample_rate_Hz) {
+      elements = new ArrayList<Float>();
+      count = 0;
       nchan = NCHAN;
     fs_Hz = sample_rate_Hz;
   }
@@ -49,11 +51,22 @@ class EEG_Processing_User {
             float squareSum = 0; 
 
             for(int i = 0; i < elements.size(); i++){
-              squareSum += Math.pow(elements.get(i) - avg, 2)
+              squareSum += Math.pow(elements.get(i) - avg, 2);
             }
 
-            float dev = Math.sqrt((squareSum) / (elements.size() - 1));
-            println(dev);
+            double dev = Math.sqrt((squareSum) / (elements.size() - 1));
+            if(!active){
+              if(dev > 90){
+                count++;
+                println("Blink " + count);
+                active = true;
+              }
+            } else {
+              if(dev < 10){
+                active = false;
+              }
+            }
+//            println(dev);
 
             elements.remove(0);
             elements.add(EEG_value_uV);
