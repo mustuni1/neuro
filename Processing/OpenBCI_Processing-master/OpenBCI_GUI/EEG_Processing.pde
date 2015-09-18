@@ -3,6 +3,8 @@
 class EEG_Processing_User {
   private float fs_Hz;  //sample rate
   private int nchan;  
+  private int total;
+  private int stage;
   
   //add your own variables here
   
@@ -31,9 +33,19 @@ class EEG_Processing_User {
         EEG_value_uV = data_forDisplay_uV[Ichan][Isamp];  // again, this is from the filtered data that is ready for display
         
         //add your processing here...
+        //println("EEG_Processing_User: Ichan = " + Ichan + ", Isamp = " + Isamp + ", EEG Value = " + EEG_value_uV + " uV");
+
         
-        
-        println("EEG_Processing_User: Ichan = " + Ichan + ", Isamp = " + Isamp + ", EEG Value = " + EEG_value_uV + " uV");
+        if(Ichan == 1){
+          if(EEG_value_uV > 95 && EEG_value_uV < 100){
+            if(stage == 0){
+               stage++;
+            }
+            else if(stage == 1){
+              println("Blink"); 
+              stage = 0;
+            }
+          }
       }
     }
         
