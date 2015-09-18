@@ -1,10 +1,11 @@
 //import ddf.minim.analysis.*; //for FFT
+import java.util.ArrayList;
 
 class EEG_Processing_User {
   private float fs_Hz;  //sample rate
   private int nchan;  
   private int total;
-  private int stage;
+  private ArrayList<Float> elements = new ArrayList<>();
   
   //add your own variables here
   
@@ -37,15 +38,30 @@ class EEG_Processing_User {
 
         
         if(Ichan == 1){
-          if(EEG_value_uV > 95 && EEG_value_uV < 100){
-            if(stage == 0){
-               stage++;
+          if(elements.size() < 200){
+            elements.add(EEG_value_uV);
+          } else {
+            float total = 0; 
+            for(int i = 0; i < elements.size(); i++){
+              total += elements.get(i);
             }
-            else if(stage == 1){
-              println("Blink"); 
-              stage = 0;
+            float avg = total / 200;
+            float squareSum = 0; 
+
+            for(int i = 0; i < elements.size(); i++){
+              squareSum += Math.pow(elements.get(i) - avg, 2)
             }
+
+            float dev = Math.sqrt((squareSum) / (elements.size() - 1));
+            println(dev);
+
+            elements.remove(0);
+            elements.add(EEG_value_uV);
           }
+        }
+
+
+
       }
     }
         
