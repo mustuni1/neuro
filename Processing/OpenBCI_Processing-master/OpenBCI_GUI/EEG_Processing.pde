@@ -62,8 +62,11 @@ class EEG_Processing_User {
                 active = true;
               }
             } else {
-              if(dev < 10){
+              if(dev < 20){
                 active = false;
+                for(int i = 0; i < elements.size(); i++){
+                  elements.set(i, 0.0);
+                }
               }
             }
 //            println(dev);
