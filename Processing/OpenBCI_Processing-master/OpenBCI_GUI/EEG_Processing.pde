@@ -7,7 +7,7 @@ class EEG_Processing_User {
   int zone = 0;
   int numPoints = 0;
   int distance = 0;
-  int currentBlinkGroup = 0;
+  int blinkGroupCount = 0;
   boolean countDistance = false;
   int count;
   //add your own variables here
@@ -59,8 +59,8 @@ class EEG_Processing_User {
             distance++;
           }
           if(distance > 200){
-            println(currentBlinkGroup + " blink(s).");
-            currentBlinkGroup = 0;
+            println(blinkGroupCount + " blink(s).");
+            blinkGroupCount = 0;
             countDistance = false;
             distance = 0;
           }
@@ -85,9 +85,10 @@ class EEG_Processing_User {
               break;
             case 4:
               if(EEG_value_uV > -30.0 && EEG_value_uV < 30.0){
-                currentBlinkGroup++;
+                blinkGroupCount++;
                 countDistance = true;
                 zone = 0;
+                distance = 0;
               }
               break;
         }
