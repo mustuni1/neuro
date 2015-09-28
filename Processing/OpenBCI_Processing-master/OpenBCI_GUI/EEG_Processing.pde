@@ -6,11 +6,13 @@ class EEG_Processing_User {
   private int nchan;
   int zone = 0;
   int numPoints = 0;
-  int betweenPoints = 0;
+  int distance = 0;
   int currentBlinkGroup = 0;
+  boolean countDistance = false;
   int count;
   //add your own variables here
-  File log = new File(System.currentTimeMillis() + ".txt");
+//  File log = new File(System.currentTimeMillis() + ".txt");
+  File log = new File("testdata1.txt");
   PrintWriter out;
 
     //class constructor
@@ -53,21 +55,19 @@ class EEG_Processing_User {
 
 
         if (Ichan == 1) {
-          if(numPoints >= 200)
-            zone = 0;
-          else
-            numPoints++;
-          if(betweenPoints > 50){
-            betweenPoints = 0;
+          if(countDistance){
+            distance++;
+          }
+          if(distance > 200){
+            println(currentBlinkGroup + " blink(s).");
             currentBlinkGroup = 0;
+            countDistance = false;
+            distance = 0;
           }
-          else{
-            betweenPoints++;
-          }
+          out.println(EEG_value_uV + " " + distance);
           switch(zone){
             case 0:
               if(EEG_value_uV < -60.0 && EEG_value_uV > -160.0){
-                numPoints = 0;
                 zone++;
               }
               break;
@@ -85,14 +85,8 @@ class EEG_Processing_User {
               break;
             case 4:
               if(EEG_value_uV > -30.0 && EEG_value_uV < 30.0){
-                println("Blink");
-                if(betweenPoints <= 100)
-                  currentBlinkGroup++;
-                else{
-                  println(currentBlinkGroup + " blink(s).");
-                  currentBlinkGroup = 1;
-                }
-                betweenPoints = 0;
+                currentBlinkGroup++;
+                countDistance = true;
                 zone = 0;
               }
               break;
