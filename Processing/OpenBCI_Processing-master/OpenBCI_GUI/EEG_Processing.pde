@@ -3,17 +3,18 @@ import java.util.ArrayList;
 
 class EEG_Processing_User {
   private float fs_Hz;  //sample rate
-  private int nchan;  
-  private ArrayList<Float> elements;
+  private int nchan;
+  int zone = 0;
+  int numPoints = 0;
+  int betweenPoints = 0;
+  int currrentBlinkGroup = 0;
   int count;
-  boolean active = false;
   //add your own variables here
   File log = new File(System.currentTimeMillis() + ".txt");
   PrintWriter out;
 
     //class constructor
   EEG_Processing_User(int NCHAN, float sample_rate_Hz) {
-    elements = new ArrayList<Float>();
     count = 0;
     nchan = NCHAN;
     fs_Hz = sample_rate_Hz;
@@ -52,47 +53,49 @@ class EEG_Processing_User {
 
 
         if (Ichan == 1) {
-          if (elements.size() < 200) {
-            elements.add(EEG_value_uV);
-          } else if (elements.size() >= 200) {
-            elements.remove(0);
-            elements.add(EEG_value_uV);
+          if(numPoints >= 200)
+            zone = 0;
+          else
+            numPoints++;
+          if(betweenPoints > 50){
+            betweenPoints = 0;
+            currentBlinkGroup = 0;
           }
-          float total = 0; 
-          for (int i = 0; i < elements.size (); i++) {
-            total += elements.get(i);
+          else{
+            betweenPoints++;
           }
-          float avg = total / elements.size();
-          float squareSum = 0; 
-
-          for (int i = 0; i < elements.size (); i++) {
-            squareSum += Math.pow(elements.get(i) - avg, 2);
-          }
-
-          double dev = Math.sqrt((squareSum) / (elements.size() - 1));
-          println(dev + "");
-          if(! Double.isNaN(dev)){
-            out.println(dev);
-          }
-          if (!active) {
-            if (dev > 90) {
-              count++;
-              println("Blink " + count);
-              active = true;
-
-              for (int i = 0; i < elements.size (); i++) {
-                elements.remove(i);
+          switch(zone){
+            case 0:
+              if(EEG_value_uV < -60.0 && EEG_value_uV > -160.0)
+                zone++;
+              break;
+            case 1:
+              if(EEG_value_uV < -200.0)
+                zone++;
+              break;
+            case 2: 
+              if(EEG_value_uV > 60.0 && EEG_value_uV > 160.0)
+                zone++;
+              break;
+            case 3: 
+              if(EEG_value_uV > 200.0)
+                zone++;
+              break;
+            case 4:
+              if(EEG_value_uV > -30.0 && EEG_value_uV < 30.0){
+                println("Blink");
+                if(betweenPoints <= 50)
+                  currentBlinkGroup++;
+                else
+                  currentBlinkGroup = 0;
+                betweenPoints = 0;
+                zone = 0;
               }
-            }
-          } else {
-            if (dev < 20) {
-              active = false;
-            }
-          }
-          //            println(dev);
+              break;
         }
       }
     }
+  }
 
     //OR, you could loop over each EEG channel and do some sort of frequency-domain processing from the FFT data
     float FFT_freq_Hz, FFT_value_uV;
