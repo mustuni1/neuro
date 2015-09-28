@@ -7,7 +7,7 @@ class EEG_Processing_User {
   int zone = 0;
   int numPoints = 0;
   int betweenPoints = 0;
-  int currrentBlinkGroup = 0;
+  int currentBlinkGroup = 0;
   int count;
   //add your own variables here
   File log = new File(System.currentTimeMillis() + ".txt");
@@ -66,8 +66,10 @@ class EEG_Processing_User {
           }
           switch(zone){
             case 0:
-              if(EEG_value_uV < -60.0 && EEG_value_uV > -160.0)
+              if(EEG_value_uV < -60.0 && EEG_value_uV > -160.0){
+                numPoints = 0;
                 zone++;
+              }
               break;
             case 1:
               if(EEG_value_uV < -200.0)
@@ -84,10 +86,12 @@ class EEG_Processing_User {
             case 4:
               if(EEG_value_uV > -30.0 && EEG_value_uV < 30.0){
                 println("Blink");
-                if(betweenPoints <= 50)
+                if(betweenPoints <= 100)
                   currentBlinkGroup++;
-                else
-                  currentBlinkGroup = 0;
+                else{
+                  println(currentBlinkGroup + " blink(s).");
+                  currentBlinkGroup = 1;
+                }
                 betweenPoints = 0;
                 zone = 0;
               }
