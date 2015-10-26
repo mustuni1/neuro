@@ -11,8 +11,8 @@ class EEG_Processing_User {
   boolean countDistance = false;
   int count;
   //add your own variables here
-//  File log = new File(System.currentTimeMillis() + ".txt");
-  File log = new File("testdata1.txt");
+  File log = new File(System.currentTimeMillis() + ".txt");
+//  File log = new File("testdata1.txt");
   PrintWriter out;
 
     //class constructor
@@ -67,20 +67,20 @@ class EEG_Processing_User {
           out.println(EEG_value_uV + " " + distance);
           switch(zone){
             case 0:
-              if(EEG_value_uV < -60.0 && EEG_value_uV > -160.0){
+              if(EEG_value_uV < -60.0 && EEG_value_uV > -80.0){
                 zone++;
               }
               break;
             case 1:
-              if(EEG_value_uV < -200.0)
+              if(EEG_value_uV < -100.0)
                 zone++;
               break;
             case 2: 
-              if(EEG_value_uV > 60.0 && EEG_value_uV > 160.0)
+              if(EEG_value_uV > 60.0 && EEG_value_uV < 80.0)
                 zone++;
               break;
             case 3: 
-              if(EEG_value_uV > 200.0)
+              if(EEG_value_uV > 100.0)
                 zone++;
               break;
             case 4:
