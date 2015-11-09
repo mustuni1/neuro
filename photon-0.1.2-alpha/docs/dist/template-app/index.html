@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Photon</title>
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../css/photon.min.css">
+    <!-- Javascript -->
+    <script src="js/menu.js" charset="utf-8"></script>
+    <style>
+    .padded-more {
+        width: 100%;
+        text-align: center;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="window">
+        <!-- .toolbar-header sits at the top of your app -->
+        <!-- <header class="toolbar toolbar-header">
+        <h1 class="title">Photon</h1>
+      </header> -->
+        <!-- Your app's content goes inside .window-content -->
+        <div class="window-content">
+            <div class="padded-more">
+                <h1>Type, bitch!</h1>
+                <br>
+                <div class="btn-group">
+                    <button class="btn btn-default"> <span>q</span></button>
+                    <button class="btn btn-default"> <span>w</span></button>
+                    <button class="btn btn-default"> <span>e</span></button>
+                    <button class="btn btn-default"> <span>r</span></button>
+                    <button class="btn btn-default"> <span>t</span></button>
+                    <button class="btn btn-default"> <span>y</span></button>
+                    <button class="btn btn-default"> <span>u</span></button>
+                    <button class="btn btn-default"> <span>i</span></button>
+                    <button class="btn btn-default"> <span>o</span></button>
+                    <button class="btn btn-default"> <span>p</span></button>
+                </div>
+                </br>
+                </br>
+                <div class="btn-group">
+                    <button class="btn btn-default"> <span>a</span></button>
+                    <button class="btn btn-default"> <span>s</span></button>
+                    <button class="btn btn-default"> <span>d</span></button>
+                    <button class="btn btn-default"> <span>f</span></button>
+                    <button class="btn btn-default"> <span>g</span></button>
+                    <button class="btn btn-default"> <span>h</span></button>
+                    <button class="btn btn-default"> <span>j</span></button>
+                    <button class="btn btn-default"> <span>k</span></button>
+                    <button class="btn btn-default"> <span>l</span></button>
+                </div>
+                </br>
+                </br>
+                <div class="btn-group">
+                    <button class="btn btn-default"> <span>z</span></button>
+                    <button class="btn btn-default"> <span>x</span></button>
+                    <button class="btn btn-default"> <span>c</span></button>
+                    <button class="btn btn-default"> <span>v</span></button>
+                    <button class="btn btn-default"> <span>b</span></button>
+                    <button class="btn btn-default"> <span>n</span></button>
+                    <button class="btn btn-default"> <span>m</span></button>
+                </div>
+                </br>
+                </br>
+                <button class="btn btn-default btn-large">Space</button>
+                </br>
+                </br>
+                <div>
+                    <p id="output">Your Entered Text</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    var $output = $("#output");
+    var initialized = false;
+
+    $(document).on("click", ".btn", function() {
+        var $this = $(this);
+        var text = initialized ? $output.text() : "";
+        initialized = true;
+        $output.text(text + $this.text().trim());
+    });
+    </script>
+</body>
+
+</html>

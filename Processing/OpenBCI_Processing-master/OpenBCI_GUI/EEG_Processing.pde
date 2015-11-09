@@ -11,8 +11,8 @@ class EEG_Processing_User {
   boolean countDistance = false;
   int count;
   //add your own variables here
-  File log = new File(System.currentTimeMillis() + ".txt");
-//  File log = new File("testdata1.txt");
+//  File log = new File(System.currentTimeMillis() + ".txt");
+  File log = new File("output.txt");
   PrintWriter out;
 
     //class constructor
@@ -23,6 +23,7 @@ class EEG_Processing_User {
     try {
       log.createNewFile();
       out = new PrintWriter(log);
+      out.println("hello");
     }
 
     catch(Exception ex) {
@@ -53,18 +54,19 @@ class EEG_Processing_User {
         //add your processing here...
         //println("EEG_Processing_User: Ichan = " + Ichan + ", Isamp = " + Isamp + ", EEG Value = " + EEG_value_uV + " uV");
 
-
+        
         if (Ichan == 1) {
           if(countDistance){
             distance++;
           }
           if(distance > 200){
-            println(blinkGroupCount + " blink(s).");
+            out.println(blinkGroupCount);
+//          System.out.println(blinkGroupCount + " blink(s).");
             blinkGroupCount = 0;
             countDistance = false;
             distance = 0;
           }
-          out.println(EEG_value_uV + " " + distance);
+//          out.println(EEG_value_uV + " " + distance);
           switch(zone){
             case 0:
               if(EEG_value_uV < -60.0 && EEG_value_uV > -80.0){
