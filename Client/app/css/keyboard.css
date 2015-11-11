@@ -1,0 +1,92 @@
+html,
+body {
+    -webkit-app-region: drag;
+    -webkit-user-select: none;
+}
+
+html {
+    background: #222;
+    color: #444;
+    font-family: 'PT Sans', sans-serif;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+}
+
+h2 {
+    position: relative;
+    margin-top: 30px;
+    color: #444;
+    text-align: center;
+}
+
+span {
+    padding: 0 0 2px;
+    border-bottom: 1px dotted #444;
+    cursor: pointer;
+    -webkit-transition: .5s;
+    -moz-transition: .5s;
+    -o-transition: .5s;
+    -ms-transition: .5s;
+    transition: .5s;
+}
+
+i {
+    color: #fd0;
+}
+
+.identifier {
+    position: absolute;
+    top: 20px;
+    color: #fd0;
+    font-weight: bold;
+}
+
+.key-wrapper {
+    position: relative;
+    margin-top: 40px;
+}
+
+.row {
+    position: relative;
+    text-align: center;
+}
+
+.key {
+    margin: 3px 1px;
+    width: 50px;
+    height: 50px;
+    border: 2px solid #555;
+    border-radius: 5px;
+    display: inline-block;
+    line-height: 52px;
+    text-align: center;
+    text-transform: uppercase;
+    -webkit-transition: .5s;
+    -moz-transition: .5s;
+    -o-transition: .5s;
+    -ms-transition: .5s;
+    transition: .5s;
+}
+
+.k32 {
+    width: 346px;
+}
+
+.active {
+    border: 2px solid #fd0;
+    color: #fd0;
+    -webkit-transition: 0s;
+    -moz-transition: 0s;
+    -ms-transition: 0s;
+    transition: 0s;
+}
+
+.feedback {
+    position: relative;
+    margin-top: 100px;
+    font-size: 200px;
+    font-weight: bold;
+    color: #444;
+    /*color: #fd0;*/
+    text-align: center;
+}
