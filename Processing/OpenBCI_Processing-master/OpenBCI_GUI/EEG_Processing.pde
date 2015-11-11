@@ -80,6 +80,7 @@ class EEG_Processing_User {
 
           switch(zone){
             case 0:
+<<<<<<< HEAD
               if(EEG_value_uV < -60.0 && EEG_value_uV > -120.0) zone++;
               break;
             case 1:
@@ -93,6 +94,21 @@ class EEG_Processing_User {
               break;
             case 4: 
               if(EEG_value_uV > -40.0 && EEG_value_uV < 40.0){
+=======
+              if(EEG_value_uV < -60.0 && EEG_value_uV > -80.0) zone++;
+              break;
+            case 1:
+              if(EEG_value_uV < -100.0) zone ++;
+              break;
+            case 2:
+              if(EEG_value_uV > 60.0 && EEG_value_uV < 80.0) zone ++;
+              break;
+            case 3: 
+              if(EEG_value_uV > 100.0) zone++;
+              break;
+            case 4: 
+              if(EEG_value_uV > -30.0 && EEG_value_uV < 30.0){
+>>>>>>> origin/master
                 blink_group_count++;
                 count_distance = true;
                 zone = 0;
@@ -310,4 +326,3 @@ class EEG_Processing {
     }    
   }
 }
-
