@@ -8,7 +8,10 @@ var LAYOUT_OPTIONS = {
     ALPHABETICAL: {
         order: 'abcdefghijklmnopqrstuvxyz',
         counts: [9, 9, 8]
-    }
+    },
+    // DVORAK: {
+
+    // }
 };
 
 var LAYOUT = LAYOUT_OPTIONS.QWERTY;
@@ -42,6 +45,7 @@ function generate_row(arr) {
     var str = "";
     for (var i in arr) {
         var ch = arr[i];
+        console.log(ch.toUpperCase(), ch.toUpperCase().charCodeAt(0));
         str += '<li class="key k' + ch.toUpperCase().charCodeAt(0) + '">' + ch + '</li>';
     }
     return str;
@@ -70,7 +74,7 @@ function init_initial_layout() {
     for (var i in rows) {
 
         var $row = $('<ul class="row ' + rows[i] + '"></ul>');
-        var identifier_number = +i + 1;
+        var identifier_number = +i + 2;
         var identifier = '<div class="identifier">' + identifier_number + '</div>';
         var str = generate_row(characters[i]);
         $row.append(identifier);
@@ -96,7 +100,7 @@ function update() {
         }
 
         for (var i = completed_count; i < lines.length; i++) {
-            input(lines[i] - 1);
+            input(lines[i]);
         }
 
         completed_count = lines.length;
@@ -115,10 +119,12 @@ function split(a, n) {
 }
 
 function input(num) {
-    var selected_row = KEYS[num];
+    if (!(num < 5 && num > -2)) return;
+
+    var selected_row = KEYS[num - 2];
     var characters = split(selected_row, 3);
 
-    $feedback.text(num + 1);
+    $feedback.text(num);
 
     if (characters.length == 1) {
         var ch = characters[0][0];
@@ -135,7 +141,7 @@ function input(num) {
     for (var i in characters) {
 
         var $row = $('<ul class="row ' + rows[i] + '"></ul>');
-        var identifier_number = +i + 1;
+        var identifier_number = +i + 2;
         var identifier = '<div class="identifier">' + identifier_number + '</div>';
         var str = generate_row(characters[i]);
         $row.append(identifier);

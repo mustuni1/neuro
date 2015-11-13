@@ -12,6 +12,7 @@ class EEG_Processing_User {
   int num_points = 0;
   int distance = 0;
   int blink_group_count = 0;
+  float max_value = 0;
   boolean count_distance = false;
 
   int count; 
@@ -63,23 +64,30 @@ class EEG_Processing_User {
         EEG_value_uV = data_forDisplay_uV[Ichan][Isamp];  // again, this is from the filtered data that is ready for display
         
         if(Ichan == 1){
-
+          if(EEG_value_uV > max_value)
+            max_value = EEG_value_uV;
           if(count_distance){
             distance++;
           }
 
-          if(distance > 200){
-
-            append_to_file(blink_group_count);
-            println(blink_group_count + " blink(s).");
-
+          if(distance > 150){
+            
+            if(blink_group_count > 1){
+              append_to_file(blink_group_count);
+              println(blink_group_count + " blink(s).");
+            }
+               
+            //RESET        
             blink_group_count = 0;
             count_distance = false;
             distance = 0;
+            max_value = 0;
           }
+          
+//          append_to_file((int)max_value);
 
           switch(zone){
-            case 0:
+            case 0: //START OF BLINK
               if(EEG_value_uV < -60.0 && EEG_value_uV > -120.0) zone++;
               break;
             case 1:
@@ -91,12 +99,26 @@ class EEG_Processing_User {
             case 3: 
               if(EEG_value_uV > 150.0) zone++;
               break;
-            case 4: 
+            case 4: //END OF BLINK
               if(EEG_value_uV > -40.0 && EEG_value_uV < 40.0){
-                blink_group_count++;
-                count_distance = true;
-                zone = 0;
-                distance = 0;
+                
+                //IF HARD BLINK
+                if(max_value > 400) {
+                  append_to_file(-1);
+                  println("space");
+                  //RESET
+                  blink_group_count = 0;
+                  count_distance = false;
+                  distance = 0;
+                } else { 
+                  blink_group_count++;
+                  count_distance = true;
+                  zone = 0;
+                  distance = 0;
+                }
+                
+                max_value = 0;
+                
               }
               break;
           }
