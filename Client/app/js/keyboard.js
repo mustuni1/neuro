@@ -16,11 +16,19 @@ var LAYOUT_OPTIONS = {
 
 var LAYOUT = LAYOUT_OPTIONS.QWERTY;
 var INITIALIZED = false;
+var CURRENT_WORD = '';
+var PREDICTED_WORDS;
+var TREE;
 var KEYS;
 
 var $key_wrapper = $('.key-wrapper');
 var $feedback = $('.feedback');
 
+function update_current_word(ch) {
+    CURRENT_WORD += ch;
+    PREDICTED_WORDS = TREE.predict(CURRENT_WORD);
+    console.log(CURRENT_WORD, PREDICTED_WORDS);
+}
 
 function send_character(ch) {
     ipc.send('character-input', ch);
@@ -41,6 +49,12 @@ function init_keyboard_events() {
     });
 }
 
+function init_tree() {
+    TREE = new jsT9(words, {
+        maxAmount: 3
+    });
+}
+
 function generate_row(arr) {
     var str = "";
     for (var i in arr) {
@@ -54,6 +68,10 @@ function generate_row(arr) {
 function append_space_bar() {
     $space_bar = $('<ul class="row"> <li class = "key k32" > </li> </ul>');
     $key_wrapper.append($space_bar);
+}
+
+function append_suggestions() {
+
 }
 
 function init_initial_layout() {
@@ -70,6 +88,21 @@ function init_initial_layout() {
     KEYS = characters;
 
     $key_wrapper.empty();
+    var $prediction_row = $('<ul class="row five"></ul>');
+    var identifier = '<div class="identifier">5</div>';
+    if (CURRENT_WORD == '') {
+        $prediction_row.append('<li class="key prediction">THE</li>');
+        $prediction_row.append('<li class="key prediction">I</li>');
+        $prediction_row.append('<li class="key prediction">A</li>');
+    } else {
+        for (var i in PREDICTED_WORDS) {
+            var predicted_word = PREDICTED_WORDS[i];
+            var new_word = '<li class="key prediction">' + predicted_word + '</li>';
+            $prediction_row.append(new_word);
+        }
+    }
+
+    $key_wrapper.append($prediction_row);
 
     for (var i in rows) {
 
@@ -119,7 +152,25 @@ function split(a, n) {
 }
 
 function input(num) {
-    if (!(num < 5 && num > -2)) return;
+    if (!(num < 7 && num > -2)) return;
+
+    //SPACE 
+    if (num == 5) {
+        send_character(" ");
+        return
+    }
+
+    //BACKSPACE
+    if (num == 6) {
+        send_character("backspace");
+        return;
+    }
+
+    //RESET
+    if (num == 7) {
+        init_initial_layout();
+        return;
+    }
 
     var selected_row = KEYS[num - 2];
     var characters = split(selected_row, 3);
@@ -128,16 +179,34 @@ function input(num) {
 
     if (characters.length == 1) {
         var ch = characters[0][0];
+        update_current_word(ch);
         send_character(ch);
         init_initial_layout();
         return;
     }
 
+    $key_wrapper.empty();
+
+    var $prediction_row = $('<ul class="row five"></ul>');
+    var identifier = '<div class="identifier">5</div>';
+    $prediction_row.append(identifier);
+    if (CURRENT_WORD == '') {
+        $prediction_row.append('<li class="key prediction">THE</li>');
+        $prediction_row.append('<li class="key prediction">I</li>');
+        $prediction_row.append('<li class="key prediction">A</li>');
+    } else {
+        for (var i in PREDICTED_WORDS) {
+            var predicted_word = PREDICTED_WORDS[i];
+            var new_word = '<li class="key prediction">' + predicted_word + '</li>';
+            $prediction_row.append(new_word);
+        }
+    }
+    $key_wrapper.append($prediction_row);
+
     KEYS = characters;
 
     var rows = ['zero', 'one', 'two'];
 
-    $key_wrapper.empty();
     for (var i in characters) {
 
         var $row = $('<ul class="row ' + rows[i] + '"></ul>');
@@ -154,8 +223,8 @@ function input(num) {
 
 }
 
-
 function init() {
+    init_tree();
     init_keyboard_events();
     init_initial_layout();
     setInterval(update, 1);
