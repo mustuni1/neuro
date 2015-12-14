@@ -122,7 +122,7 @@ function init_initial_layout() {
 var completed_count = 0;
 
 function update() {
-    $.get('/Users/Sashank/eeg_output.txt', function(data) {
+    $.get('/Users/' + SYSTEM_USER + '/eeg_output.txt', function(data) {
         if (!data) return;
         var lines = data.split('\n');
         lines.pop(); //remove trailing newline
