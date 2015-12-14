@@ -17,7 +17,8 @@ var LAYOUT_OPTIONS = {
 var LAYOUT = LAYOUT_OPTIONS.QWERTY;
 var INITIALIZED = false;
 var CURRENT_WORD = '';
-var PREDICTED_WORDS;
+var PREDICTED_WORDS = ['the', 'I', 'a'];
+var SELECTING_WORD = false;
 var TREE;
 var KEYS;
 
@@ -90,16 +91,12 @@ function init_initial_layout() {
     $key_wrapper.empty();
     var $prediction_row = $('<ul class="row five"></ul>');
     var identifier = '<div class="identifier">5</div>';
-    if (CURRENT_WORD == '') {
-        $prediction_row.append('<li class="key prediction">THE</li>');
-        $prediction_row.append('<li class="key prediction">I</li>');
-        $prediction_row.append('<li class="key prediction">A</li>');
-    } else {
-        for (var i in PREDICTED_WORDS) {
-            var predicted_word = PREDICTED_WORDS[i];
-            var new_word = '<li class="key prediction">' + predicted_word + '</li>';
-            $prediction_row.append(new_word);
-        }
+    $prediction_row.append(identifier);
+
+    for (var i in PREDICTED_WORDS) {
+        var predicted_word = PREDICTED_WORDS[i];
+        var new_word = '<li class="key prediction">' + predicted_word + '</li>';
+        $prediction_row.append(new_word);
     }
 
     $key_wrapper.append($prediction_row);
@@ -152,22 +149,62 @@ function split(a, n) {
 }
 
 function input(num) {
-    if (!(num < 7 && num > -2)) return;
+    var rows = ['zero', 'one', 'two'];
+    if (!(num <= 5 && num >= -3)) return;
+
+    if (SELECTING_WORD && num == 5) return;
 
     //SPACE 
-    if (num == 5) {
+    if (num == -1) {
+        CURRENT_WORD = '';
         send_character(" ");
         return
     }
 
     //BACKSPACE
-    if (num == 6) {
+    if (num == -2) {
         send_character("backspace");
+        CURRENT_WORD.slice(0, CURRENT_WORD.length - 1)
         return;
     }
 
     //RESET
-    if (num == 7) {
+    if (num == -3) {
+        init_initial_layout();
+        return;
+    }
+
+    if (num == 5) {
+        $key_wrapper.empty();
+        for (var i in PREDICTED_WORDS) {
+            console.log(PREDICTED_WORDS, i);
+            console.log('hi');
+            var $row = $('<ul class="row ' + rows[i] + '"></ul>');
+            var identifier_number = +i + 2;
+            var identifier = '<div class="identifier">' + identifier_number + '</div>';
+            var str = '<li class="key prediction">' + PREDICTED_WORDS[+i] + '</li>';
+            $row.append(identifier);
+            $row.append(str);
+
+            $key_wrapper.append($row);
+            SELECTING_WORD = true;
+        }
+
+        append_space_bar();
+        return;
+    }
+
+    if (SELECTING_WORD) {
+        if (CURRENT_WORD.length > 0) {
+            // delete typed word
+            for (var i = CURRENT_WORD.length - 1; i >= 0; i--) {
+                send_character("backspace");
+            };
+        }
+        send_character(PREDICTED_WORDS[num - 2] + ' ');
+        CURRENT_WORD = '';
+        SELECTING_WORD = false;
+        PREDICTED_WORDS = ['the', 'I', 'a'];
         init_initial_layout();
         return;
     }
@@ -190,22 +227,15 @@ function input(num) {
     var $prediction_row = $('<ul class="row five"></ul>');
     var identifier = '<div class="identifier">5</div>';
     $prediction_row.append(identifier);
-    if (CURRENT_WORD == '') {
-        $prediction_row.append('<li class="key prediction">THE</li>');
-        $prediction_row.append('<li class="key prediction">I</li>');
-        $prediction_row.append('<li class="key prediction">A</li>');
-    } else {
-        for (var i in PREDICTED_WORDS) {
-            var predicted_word = PREDICTED_WORDS[i];
-            var new_word = '<li class="key prediction">' + predicted_word + '</li>';
-            $prediction_row.append(new_word);
-        }
+    for (var i in PREDICTED_WORDS) {
+        var predicted_word = PREDICTED_WORDS[i];
+        var new_word = '<li class="key prediction">' + predicted_word + '</li>';
+        $prediction_row.append(new_word);
     }
     $key_wrapper.append($prediction_row);
 
     KEYS = characters;
 
-    var rows = ['zero', 'one', 'two'];
 
     for (var i in characters) {
 
