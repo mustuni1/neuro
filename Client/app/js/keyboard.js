@@ -8,10 +8,7 @@ var LAYOUT_OPTIONS = {
     ALPHABETICAL: {
         order: 'abcdefghijklmnopqrstuvxyz',
         counts: [9, 9, 8]
-    },
-    // DVORAK: {
-
-    // }
+    }
 };
 
 var LAYOUT = LAYOUT_OPTIONS.QWERTY;
@@ -177,8 +174,6 @@ function input(num) {
     if (num == 5) {
         $key_wrapper.empty();
         for (var i in PREDICTED_WORDS) {
-            console.log(PREDICTED_WORDS, i);
-            console.log('hi');
             var $row = $('<ul class="row ' + rows[i] + '"></ul>');
             var identifier_number = +i + 2;
             var identifier = '<div class="identifier">' + identifier_number + '</div>';
