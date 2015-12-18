@@ -167,6 +167,7 @@ function input(num) {
 
     //RESET
     if (num == -3) {
+        CURRENT_WORD = '';
         init_initial_layout();
         return;
     }
