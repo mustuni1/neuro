@@ -105,7 +105,7 @@ class EEG_Processing_User {
                 //IF HARD BLINK
                 if(max_value > 400) {
                   append_to_file(-1);
-                  println("space");
+                  println("backspace");
                   //RESET
                   blink_group_count = 0;
                   count_distance = false;

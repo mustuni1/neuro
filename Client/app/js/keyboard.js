@@ -154,17 +154,17 @@ function input(num) {
 
     if (SELECTING_WORD && num == 5) return;
 
-    //SPACE 
+    //BACKSPACE 
     if (num == -1) {
-        CURRENT_WORD = '';
-        send_character(" ");
+        CURRENT_WORD.slice(0, CURRENT_WORD.length - 1)
+        send_character("backspace");
         return
     }
 
-    //BACKSPACE
+    //SPACE
     if (num == -2) {
+        CURRENT_WORD = '';
         send_character("backspace");
-        CURRENT_WORD.slice(0, CURRENT_WORD.length - 1)
         return;
     }
 
