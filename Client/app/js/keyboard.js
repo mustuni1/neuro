@@ -171,6 +171,21 @@ function input(num) {
         return;
     }
 
+    if (SELECTING_WORD) {
+        if (CURRENT_WORD.length > 0) {
+            // delete typed word
+            for (var i = CURRENT_WORD.length - 1; i >= 0; i--) {
+                send_character("backspace");
+            };
+        }
+        send_character(PREDICTED_WORDS[num - 2] + ' ');
+        CURRENT_WORD = '';
+        SELECTING_WORD = false;
+        PREDICTED_WORDS = ['the', 'I', 'a'];
+        init_initial_layout();
+        return;
+    }
+
     if (num == 5) {
         $key_wrapper.empty();
         for (var i in PREDICTED_WORDS) {
@@ -186,21 +201,6 @@ function input(num) {
         }
 
         append_space_bar();
-        return;
-    }
-
-    if (SELECTING_WORD) {
-        if (CURRENT_WORD.length > 0) {
-            // delete typed word
-            for (var i = CURRENT_WORD.length - 1; i >= 0; i--) {
-                send_character("backspace");
-            };
-        }
-        send_character(PREDICTED_WORDS[num - 2] + ' ');
-        CURRENT_WORD = '';
-        SELECTING_WORD = false;
-        PREDICTED_WORDS = ['the', 'I', 'a'];
-        init_initial_layout();
         return;
     }
 
