@@ -18,14 +18,15 @@ var PREDICTED_WORDS = ['the', 'I', 'a'];
 var SELECTING_WORD = false;
 var TREE;
 var KEYS;
+var INITIAL_LAYOUT = false;
 
 var $key_wrapper = $('.key-wrapper');
 var $feedback = $('.feedback');
 
 function update_current_word(ch) {
     CURRENT_WORD += ch;
-    PREDICTED_WORDS = TREE.predict(CURRENT_WORD);
-    console.log(CURRENT_WORD, PREDICTED_WORDS);
+    if (TREE.predict(CURRENT_WORD).length != 0)
+        PREDICTED_WORDS = TREE.predict(CURRENT_WORD);
 }
 
 function send_character(ch) {
@@ -73,6 +74,8 @@ function append_suggestions() {
 }
 
 function init_initial_layout() {
+    INITIAL_LAYOUT = true;
+    PREDICTED_WORDS = TREE.predict(CURRENT_WORD);
     var rows = ['zero', 'one', 'two'];
     var counts = LAYOUT.counts;
     var order = LAYOUT.order;
@@ -89,6 +92,10 @@ function init_initial_layout() {
     var $prediction_row = $('<ul class="row five"></ul>');
     var identifier = '<div class="identifier">5</div>';
     $prediction_row.append(identifier);
+
+    if (CURRENT_WORD == '') {
+        PREDICTED_WORDS = ['the', 'I', 'a'];
+    };
 
     for (var i in PREDICTED_WORDS) {
         var predicted_word = PREDICTED_WORDS[i];
@@ -153,15 +160,19 @@ function input(num) {
 
     //BACKSPACE 
     if (num == -1) {
-        CURRENT_WORD.slice(0, CURRENT_WORD.length - 1)
-        send_character("backspace");
-        return
+        if (INITIAL_LAYOUT) { // if it's in initial layout, delete last letter
+            CURRENT_WORD = CURRENT_WORD.slice(0, CURRENT_WORD.length - 1);
+            send_character("backspace");
+        };
+        init_initial_layout();
+        return;
     }
 
     //SPACE
     if (num == -2) {
         CURRENT_WORD = '';
-        send_character("backspace");
+        send_character(" ");
+        init_initial_layout();
         return;
     }
 
@@ -173,6 +184,7 @@ function input(num) {
     }
 
     if (SELECTING_WORD) {
+        $feedback.text(num);
         if (CURRENT_WORD.length > 0) {
             // delete typed word
             for (var i = CURRENT_WORD.length - 1; i >= 0; i--) {
@@ -188,6 +200,8 @@ function input(num) {
     }
 
     if (num == 5) {
+        INITIAL_LAYOUT = false;
+        $feedback.text(num);
         $key_wrapper.empty();
         for (var i in PREDICTED_WORDS) {
             var $row = $('<ul class="row ' + rows[i] + '"></ul>');
@@ -205,6 +219,7 @@ function input(num) {
         return;
     }
 
+    INITIAL_LAYOUT = false;
     var selected_row = KEYS[num - 2];
     var characters = split(selected_row, 3);
 
