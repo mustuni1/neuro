@@ -5,9 +5,9 @@ body {
 }
 
 html {
-    /*background: rgba(34, 34, 34, 0.3);*/
-    background: #222;
-    color: #999;
+    background: rgba(34, 34, 34, 0.3);
+    /*background: #222;*/
+    color: #222;
     font-family: 'PT Sans', sans-serif;
     font-size: 15px;
     -webkit-font-smoothing: antialiased;

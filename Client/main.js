@@ -3,7 +3,7 @@ var BrowserWindow = require('browser-window');
 var ipc = require('ipc');
 var robot = require("robotjs");
 
-var MODE = "window"
+var MODE = "not window"
 var keyboardWindow = null;
 
 if (MODE == "window") {
@@ -58,8 +58,8 @@ app.on('ready', function() {
         keyboardWindow = new BrowserWindow({
             frame: false,
             width: 650,
-            // height: 420,
-            height: 360,
+            height: 430,
+            // height: 360,
             resizable: false,
             x: size.width - 400,
             y: 0,
